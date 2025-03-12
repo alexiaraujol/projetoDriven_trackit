@@ -1,29 +1,25 @@
 import styled from 'styled-components';
 
-function Habito() {
+function HabitoCriado({habits}) {
+    const diasDaSemana = [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+
     return (
+        
         <>
-        <Habitocontainer>
-
-            <Texto>Ler 1 capítulo de livro</Texto>
-
-            <>
-            <DiadaSemana type="button">S</DiadaSemana>
-            <DiadaSemana type="button">T</DiadaSemana>
-            <DiadaSemana type="button">Q</DiadaSemana>
-            <DiadaSemana type="button">Q</DiadaSemana>
-            <DiadaSemana type="button">S</DiadaSemana>
-            <DiadaSemana type="button">S</DiadaSemana>
-            <DiadaSemana type="button">D</DiadaSemana>
-            </>
-
-        </Habitocontainer>
+        
+            <Habitocontainer >
+                <Texto>{habits.name}</Texto>
+                {diasDaSemana.map((dia, index) => (
+                    <DiadaSemana key={index} type="button">{dia}</DiadaSemana>
+                ))}
+            </Habitocontainer>
+       
         </>
         
     );
 }
 
-export default Habito;
+export default HabitoCriado;
 
 const Habitocontainer = styled.div`
 
@@ -31,6 +27,7 @@ const Habitocontainer = styled.div`
     height:91px;
     border-radius: 5px;
     padding: 10px;
+    margin-bottom: 15px;
 
     background-color: #fff;
 

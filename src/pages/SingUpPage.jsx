@@ -1,41 +1,43 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 import logo from '../assets/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 
 function SignUpPage() {
-
    const [email, setEmail] = useState("");
    const [senha, setSenha] = useState("");
    const [nome, setNome] = useState("");
    const [foto, setFoto] = useState("");
+   const [loading, setLoading] = useState(false);
    const navigate = useNavigate();
 
    function cadastro(e) {
-      e.preventDefault()
-      const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up"
+      e.preventDefault();
+      setLoading(true);
+      const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
       const body = {
          email,
          password: senha,
          name: nome,
          image: foto
-      }
+      };
 
       axios.post(URL, body)
-         .then(() => navigate("/"))
-         .catch(err => console.log(err.response.data))
-
+         .then(() => {
+            setLoading(false);
+            navigate("/");
+         })
+         .catch(err => {
+            setLoading(false);
+            alert(err.response.data.message);
+         });
    }
 
-
-
    return (
-
       <Container>
-
          <Logo src={logo} alt="logo" />
-
          <Formulario onSubmit={cadastro}>
             <Input
                type="text"
@@ -43,6 +45,7 @@ function SignUpPage() {
                required
                value={email}
                onChange={(e) => setEmail(e.target.value)}
+               disabled={loading}
             />
             <Input
                type="password"
@@ -50,7 +53,7 @@ function SignUpPage() {
                required
                value={senha}
                onChange={(e) => setSenha(e.target.value)}
-
+               disabled={loading}
             />
             <Input
                type="text"
@@ -58,6 +61,7 @@ function SignUpPage() {
                required
                value={nome}
                onChange={(e) => setNome(e.target.value)}
+               disabled={loading}
             />
             <Input
                type="url"
@@ -65,20 +69,31 @@ function SignUpPage() {
                required
                value={foto}
                onChange={(e) => setFoto(e.target.value)}
+               disabled={loading}
             />
-
-            <Button type="submit">Cadastrar</Button>
+            <Button type="submit" disabled={loading}>
+               {loading ? (
+                  <ThreeDots
+                     visible={true}
+                     height="13"
+                     width="51"
+                     color="#fff"
+                     radius="9"
+                     ariaLabel="three-dots-loading"
+                     wrapperStyle={{}}
+                     wrapperClass=""
+                  />
+               ) : (
+                  "Cadastrar"
+               )}
+            </Button>
             <Texto to="/">Já tem uma conta? Faça login!</Texto>
          </Formulario>
-
       </Container>
-
-
-   )
-
+   );
 }
 
-export default SignUpPage
+export default SignUpPage;
 
 const Container = styled.div`
   height: 100vh;
@@ -86,11 +101,13 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #fff;
-  margin-top: 68px ;
-`
+  margin-top: 68px;
+`;
+
 const Logo = styled.img`
    width: 180px;
-   height: 178px;`
+   height: 178px;
+`;
 
 const Formulario = styled.form`
    display: flex;
@@ -99,8 +116,7 @@ const Formulario = styled.form`
    justify-content: center;
    background-color: #fff;
    margin-top: 40px;
-
-   `
+`;
 
 const Input = styled.input`
    width: 303px;
@@ -113,8 +129,7 @@ const Input = styled.input`
    padding-left: 10px;
    font-family: "Lexend Deca", sans-serif;
    color: #DBDBDB;
-
-`
+`;
 
 const Button = styled.button`
    width: 303px;
@@ -128,8 +143,11 @@ const Button = styled.button`
    background-color: #52B6FF;
    font-family: "Lexend Deca", sans-serif;
    font-weight: 400;
-   cursor: pointer
-`
+   cursor: pointer;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+`;
 
 const Texto = styled(Link)`
    font-size: 16px;
@@ -139,4 +157,4 @@ const Texto = styled(Link)`
    cursor: pointer;
    margin-top: 10px;
    text-decoration: underline;
-`
+`;

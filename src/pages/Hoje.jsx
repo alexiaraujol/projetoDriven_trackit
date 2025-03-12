@@ -1,43 +1,75 @@
 import styled from 'styled-components';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import Navbar from '../components/Navbar';
+import Rodape from '../components/Rodape';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-function Hoje() {
+function Hoje({ token }) {
 
-    return(
+    const [habits, setHabits] = useState ([])
+    const navigate = useNavigate
 
-        <Container>
-            <Data>Segunda, 17/05</Data>
 
-            <Caixa>
-                <div>
-                <Habito>Ler 1 capitulo de livro</Habito>
-                <Informacoes>Sequencia: 3 dias <br/>
-                   Seu recorde: 5 dias</Informacoes>  
-                </div>   
-                <CheckBoxIcon sx={{fontSize:69, color: '#e7e7e7' }}/> 
-            </Caixa>
+    useEffect(() => {
+        if(!token) {
+            navigate("/")
+        }
 
-            <Caixa>
-                <div>
-                <Habito>Estudar JS</Habito>
-                <Informacoes>Sequencia: 3 dias <br/>
-                   Seu recorde: 5 dias</Informacoes>
-                </div>   
-                <CheckBoxIcon sx={{fontSize:69, color: '#e7e7e7' }}/>
-            </Caixa>
+    }, [])
 
-            <Caixa>
-                <div>
-                <Habito>Academia</Habito>
-                <Informacoes>Sequencia: 3 dias <br/>
-                   Seu recorde: 5 dias</Informacoes>
-                </div>    
-                <CheckBoxIcon sx={{fontSize:69, color: '#e7e7e7' }}/>
-            </Caixa>
-             
+    useEffect(() => {
+        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
 
-        </Container>
-      
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        axios.get(URL, config)
+            .then(res => setHabits(res.data))
+            .catch(err => console.log(err.response.data))
+    }, [])
+
+    if (habits.length === 0) {
+        return (
+            <>
+                <Navbar /> 
+                <Container>
+                    <Data>Segunda, 17/05</Data>
+                    <Texto>Você não tem nenhum hábito cadastrado hoje.</Texto>
+                </Container>
+                <Rodape />
+            </>
+        )
+    }
+
+    return (
+        <>
+            <Navbar />
+            <Container>
+                <Data>Segunda, 17/05</Data>
+
+                {habits.map((habit, index) => (
+
+                    <Caixa key={index}>
+                        <div>
+                            <Habito>{habit.name}</Habito>
+                            <Informacoes>Sequencia: {habit.currentSequence} dias <br />
+                                Seu recorde: {habit.highestSequence} dias</Informacoes>
+                        </div>
+                        <CheckBoxIcon sx={{ fontSize: 69, color: '#e7e7e7', padding:'10px 10px 0px 0px' }}
+                        />
+                    </Caixa>
+
+                ))}
+
+            </Container>
+            <Rodape />
+        </>
+
     )
 }
 
@@ -61,13 +93,14 @@ const Caixa = styled.div`
     background-color: #fff;
     margin-bottom: 15px;
     display: flex;
+    justify-content:space-between;
     
     
     
 `
 
 const Data = styled.h1`
-    width:calc(100vw - 215px);
+    width:calc(100vw - 203px);
     height:29px;
     font-family: "Lexend Deca", sans-serif;
     color: #126BA5;
@@ -97,3 +130,13 @@ const Informacoes = styled.p`
     padding-left: 15px;
     
 `
+const Texto = styled.p`
+    height: 74px;
+    padding-top: 15px;
+    padding-left: 25px;
+    padding-right: 25px;
+    font-size: 17.98px;
+    font-weight: 400;
+    font-family: "Lexend Deca", sans-serif;
+    color: #666666;
+`;

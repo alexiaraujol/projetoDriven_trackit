@@ -1,12 +1,13 @@
 import styled from "styled-components"
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import { Link } from "react-router-dom";
 
 function Rodape() {
     return (
         <ContainerRodape>
-            <Habitos> <CalendarMonthIcon/> Hábitos</Habitos>
-            <Hoje> <EventAvailableIcon/> Histórico</Hoje>
+            <Habitos to="/habitos"> <CalendarMonthIcon/> Hábitos</Habitos>
+            <Hoje to="/hoje"> <EventAvailableIcon/> Hoje</Hoje>
         </ContainerRodape>
 
     )
@@ -17,12 +18,12 @@ export default Rodape;
 const ContainerRodape = styled.div`
         width: 100vw;
         height: 65px;
-        position: absolute;
+        position: fixed;
         bottom: 0;
         display: flex; /* Adicionado para alinhar os botões lado a lado */
 `
 
-const Habitos = styled.button`
+const Habitos = styled(Link)`
     width: 50%; /* Ajustado para 50% da largura */
     height: 65px;
     background-color: #52B6FF;
@@ -31,10 +32,14 @@ const Habitos = styled.button`
     font-size: 18px;
     font-weight: 400;
     font-family: "Lexend Deca", sans-serif;
-    cursor: pointer;
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    text-decoration: none;
+    
 `
 
-const Hoje = styled.button`
+const Hoje = styled(Link)`
     width: 50%; /* Ajustado para 50% da largura */
     height: 65px;
     background-color: #FFFFFF;
@@ -43,5 +48,9 @@ const Hoje = styled.button`
     font-size: 18px;
     font-weight: 400;
     font-family: "Lexend Deca", sans-serif; 
-    cursor: pointer;
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    text-decoration: none;
+    
 `

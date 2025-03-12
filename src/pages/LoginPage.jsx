@@ -1,72 +1,81 @@
-
-import logo from '../assets/logo.png'
-import styled from 'styled-components'
+import styled from 'styled-components';
+import logo from '../assets/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
+import { ThreeDots } from 'react-loader-spinner';
 
-
-function LoginPage() {
+function LoginPage({ setToken }) {
    const [email, setEmail] = useState("");
    const [senha, setSenha] = useState("");
+   const [loading, setLoading] = useState(false);
    const navigate = useNavigate();
 
-   function sendLogin(e) {
-      e.preventDefault()
-      const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login"
+   function login(e) {
+      e.preventDefault();
+      setLoading(true);
+      const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login";
       const body = {
          email,
          password: senha
-      }
+      };
 
       axios.post(URL, body)
-         .then(res => {
-            console.log(res.data)
-            navigate("/pagina-inicial")
-
-            
+         .then((res) => {
+            setLoading(false);
+            setToken(res.data.token);
+            localStorage.setItem("token",res.data.token)
+            navigate("/hoje");
          })
-         .catch(err => alert(err.response.data.message))
+         .catch(err => {
+            setLoading(false);
+            alert(err.response.data.message);
+         });
    }
 
-
-
    return (
-
       <Container>
-
          <Logo src={logo} alt="logo" />
-
-         <Formulario onSubmit={sendLogin}>
-
+         <Formulario onSubmit={login}>
             <Input
-               type="email"
+               type="text"
                placeholder="email"
                required
                value={email}
-               onChange={e => setEmail(e.target.value)}
+               onChange={(e) => setEmail(e.target.value)}
+               disabled={loading}
             />
-
             <Input
                type="password"
                placeholder="senha"
                required
                value={senha}
-               onChange={e => setSenha(e.target.value)}
+               onChange={(e) => setSenha(e.target.value)}
+               disabled={loading}
             />
-
-            <Button type="submit">Entrar</Button>
-            <Texto to="/sing-up" >Não tem uma conta? Cadastre-se!</Texto>
+            <Button type="submit" disabled={loading}>
+               {loading ? (
+                  <ThreeDots
+                     visible={true}
+                     height="13"
+                     width="51"
+                     color="#fff"
+                     radius="9"
+                     ariaLabel="three-dots-loading"
+                     wrapperStyle={{}}
+                     wrapperClass=""
+                  />
+               ) : (
+                  "Entrar"
+               )}
+            </Button>
+            <Texto to="/sing-up">Não tem uma conta? Cadastre-se!</Texto>
          </Formulario>
-
       </Container>
-
-
-   )
-
+   );
 }
 
-export default LoginPage
+export default LoginPage;
 
 const Container = styled.div`
   height: 100vh;
@@ -74,12 +83,13 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #fff;
-  margin-top: 68px ;
-`
+  margin-top: 68px;
+`;
 
 const Logo = styled.img`
    width: 180px;
-   height: 178px;`
+   height: 178px;
+`;
 
 const Formulario = styled.form`
    display: flex;
@@ -88,22 +98,20 @@ const Formulario = styled.form`
    justify-content: center;
    background-color: #fff;
    margin-top: 40px;
-
-   `
+`;
 
 const Input = styled.input`
    width: 303px;
    height: 45px;
    margin-bottom: 6px;
-   border: 1px solid #D5D5D5;
+   border: 1px solid #D4D4D4;
    border-radius: 5px;
    font-size: 19.98px;
    font-weight: 400;
    padding-left: 10px;
    font-family: "Lexend Deca", sans-serif;
    color: #DBDBDB;
-
-`
+`;
 
 const Button = styled.button`
    width: 303px;
@@ -117,8 +125,12 @@ const Button = styled.button`
    background-color: #52B6FF;
    font-family: "Lexend Deca", sans-serif;
    font-weight: 400;
-   cursor: pointer
-`
+   cursor: pointer;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+`;
+
 const Texto = styled(Link)`
    font-size: 16px;
    font-weight: 400;
@@ -127,4 +139,4 @@ const Texto = styled(Link)`
    cursor: pointer;
    margin-top: 10px;
    text-decoration: underline;
-`
+`;

@@ -1,30 +1,72 @@
-import styled from 'styled-components';
-import AdicionarHabitos from '../components/AdicionarHabitos';
-import Habito from '../components/Habito';
 
-function Habitos() {
+import styled from 'styled-components';
+import CriarHabito from '../components/CriarHabito';
+import HabitoCriado from '../components/HabitoCriado';
+import Navbar from '../components/Navbar';
+import Rodape from '../components/Rodape';
+import { useEffect, useState, } from 'react';
+import axios from 'axios';
+
+function Habitos({ token }) {
+
+    const [habits, setHabits] = useState(null)
+
+    useEffect(() => {
+        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        axios.get(URL, config)
+            .then(res => setHabits(res.data))
+            .catch(err => console.log(err.response.data))
+    }, [])
+
+
+    if (habits === null) {
+        return (
+            <>
+                <Navbar />
+                <Container>
+                    <Topo>
+                        <Textinho>Meus hábitos</Textinho>
+                        <Botao>+</Botao>
+                    </Topo>
+                    <Texto>
+                        Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
+                    </Texto>
+                </Container>
+                <Rodape />
+            </>
+        )
+    }
 
     return (
-        <Container>
-            <Adicionarhabito>
-                <Textinho>Meus hábitos</Textinho>
-                <Botao>+</Botao>
-            </Adicionarhabito>
+        <>
+            <Navbar />
+            <Container>
+                <Topo>
+                    <Textinho>Meus hábitos</Textinho>
+                    <Botao>+</Botao>
+                </Topo>
+
+                {/* <CriarHabito /> */}
+
+                {habits.map((habits, index) => (
+
+                    <HabitoCriado habits={habits} key={index} />
+
+                ))}
 
 
 
-            {/* <AdicionarHabitos/> */}
-            
-
-            <Texto>
-                <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
-            </Texto>
-
-            {/* <Habito/> */}
-            
-        </Container>
-
-    )
+            </Container>
+            <Rodape />
+        </>
+    );
 }
 
 export default Habitos;
@@ -37,9 +79,9 @@ const Container = styled.div`
     align-items: center;
     /* justify-content: center; */
     background-color: #F2F2F2;
-`
+`;
 
-const Adicionarhabito = styled.div`
+const Topo = styled.div`
     width: 100vw;
     display: flex;
     justify-content: space-between;
@@ -50,17 +92,15 @@ const Adicionarhabito = styled.div`
     margin-right:17px;
     margin-bottom: 20px;
     padding-right: 11px;
-   
-`
-const Textinho = styled.h2`
+`;
 
+const Textinho = styled.h2`
     font-family: "Lexend Deca", sans-serif;
     color: #126BA5;
     font-size: 22.98px;
     font-weight: 400;
-    padding-left: 12px;
-    
-`
+    padding-left: 28px;
+`;
 
 const Botao = styled.button`
     width:40px;
@@ -70,12 +110,10 @@ const Botao = styled.button`
     border: none;
     font-size: 27px;
     color: #fff;
-    
-
-`
+    margin-right: 16px;
+`;
 
 const Texto = styled.p`
-    
     height: 74px;
     padding-top: 15px;
     padding-left: 25px;
@@ -84,5 +122,5 @@ const Texto = styled.p`
     font-weight: 400;
     font-family: "Lexend Deca", sans-serif;
     color: #666666;
-`
+`;
 
