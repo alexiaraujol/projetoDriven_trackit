@@ -1,48 +1,34 @@
-
 import styled from 'styled-components';
 import CriarHabito from '../components/CriarHabito';
 import HabitoCriado from '../components/HabitoCriado';
 import Navbar from '../components/Navbar';
 import Rodape from '../components/Rodape';
-import { useEffect, useState, } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Habitos({ token }) {
-
-    const [habits, setHabits] = useState(null)
+    const [habits, setHabits] = useState([]);
+    const [showCriarHabito, setShowCriarHabito] = useState(false);
 
     useEffect(() => {
-        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today"
+        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
 
         const config = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-        }
+        };
 
         axios.get(URL, config)
             .then(res => setHabits(res.data))
-            .catch(err => console.log(err.response.data))
-    }, [])
+            .catch(err => console.log(err.response.data));
+    }, [token]);
 
+    const toggleCriarHabito = () => {
+        setShowCriarHabito(!showCriarHabito);
+    };
 
-    if (habits === null) {
-        return (
-            <>
-                <Navbar />
-                <Container>
-                    <Topo>
-                        <Textinho>Meus hábitos</Textinho>
-                        <Botao>+</Botao>
-                    </Topo>
-                    <Texto>
-                        Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
-                    </Texto>
-                </Container>
-                <Rodape />
-            </>
-        )
-    }
+    
 
     return (
         <>
@@ -50,19 +36,17 @@ function Habitos({ token }) {
             <Container>
                 <Topo>
                     <Textinho>Meus hábitos</Textinho>
-                    <Botao>+</Botao>
+                    <Botao onClick={toggleCriarHabito}>+</Botao>
                 </Topo>
 
-                {/* <CriarHabito /> */}
+               
 
-                {habits.map((habits, index) => (
+                {showCriarHabito && <CriarHabito token={token} />}
 
-                    <HabitoCriado habits={habits} key={index} />
 
+                {habits.map((habit, index) => (
+                    <HabitoCriado token={token} habit={habit} key={index} />
                 ))}
-
-
-
             </Container>
             <Rodape />
         </>
@@ -72,13 +56,13 @@ function Habitos({ token }) {
 export default Habitos;
 
 const Container = styled.div`
-    padding-top: 87px;
     height: 100vh;
+    padding-top: 87px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
     background-color: #F2F2F2;
+    padding-bottom: 73px;
 `;
 
 const Topo = styled.div`
@@ -118,6 +102,7 @@ const Texto = styled.p`
     padding-top: 15px;
     padding-left: 25px;
     padding-right: 25px;
+    margin-left: 10px;
     font-size: 17.98px;
     font-weight: 400;
     font-family: "Lexend Deca", sans-serif;

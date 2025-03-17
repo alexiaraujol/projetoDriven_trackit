@@ -1,15 +1,23 @@
-import perfil from '../assets/perfil.jpg';
 import styled from 'styled-components';
+import UserContext from '../contexts/UserContext';
+import { useContext } from 'react';
 
 function Navbar() {
+    const [user] = useContext(UserContext)
+    console.log(user.image)
+
     return (
         <Container>
             <Titulo>TrackIt</Titulo>
-            <Foto src={perfil} alt="logo" />
+            <Foto src={user.image} alt="logo" />
         </Container>
 
+
     );
+
 }
+
+
 
 export default Navbar;
 

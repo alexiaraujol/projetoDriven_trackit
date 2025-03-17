@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import logo from '../assets/logo.png';
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
+import UserContext from '../contexts/UserContext';
 
 function LoginPage({ setToken }) {
    const [email, setEmail] = useState("");
    const [senha, setSenha] = useState("");
    const [loading, setLoading] = useState(false);
    const navigate = useNavigate();
-
+   const [user, setUser ] = useContext(UserContext); 
    function login(e) {
       e.preventDefault();
       setLoading(true);
@@ -23,14 +23,17 @@ function LoginPage({ setToken }) {
       axios.post(URL, body)
          .then((res) => {
             setLoading(false);
+            setUser(res.data);
             setToken(res.data.token);
-            localStorage.setItem("token",res.data.token)
+            localStorage.setItem("token", res.data.token);
             navigate("/hoje");
          })
          .catch(err => {
             setLoading(false);
             alert(err.response.data.message);
          });
+
+        
    }
 
    return (

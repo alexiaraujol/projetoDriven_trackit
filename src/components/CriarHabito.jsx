@@ -1,18 +1,60 @@
 import styled from 'styled-components';
 import { ThreeDots } from 'react-loader-spinner';
+import { useState } from 'react';
+import axios from 'axios';
+
 
 function CriarHabito({ token }) {
-
+    const [name, setName] = useState("");
+    const [diasSelecionados, setDiasSelecionados] = useState([]);
+    const [loading, setLoading] = useState(false);
     const diasDaSemana = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+    
+
+    const handleDiaClick = (index) => {
+        if (diasSelecionados.includes(index)) {
+            setDiasSelecionados(diasSelecionados.filter(d => d !== index));
+        } else {
+            setDiasSelecionados([...diasSelecionados, index]);
+        }
+    };
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    function criarHabito(e) {
+        e.preventDefault();
+        setLoading(true);
+
+        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
+        const body = {
+            name,
+            days: diasSelecionados
+        };
+
+        axios.post(URL, body, config)
+            .then((res) => {
+                setLoading(false);
+                console.log(res.data);
+
+            })
+            .catch(err => {
+                setLoading(false);
+                console.log(err.response.data);
+            });
+    }
 
     return (
         <Adicionarcontainer>
-            <form>
+            <form onSubmit={criarHabito}>
                 <Input
                     type="text"
                     placeholder="nome do hábito"
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     disabled={loading}
                 />
                 <div>
@@ -50,7 +92,6 @@ function CriarHabito({ token }) {
     );
 }
 
-
 export default CriarHabito;
 
 const Adicionarcontainer = styled.div`
@@ -62,6 +103,7 @@ const Adicionarcontainer = styled.div`
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
+    margin-bottom: 15px;
 `;
 
 const Input = styled.input`
