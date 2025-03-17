@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import logo from '../assets/logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
+import logo from "../assets/logo.png"
 
 function SignUpPage() {
    const [email, setEmail] = useState("");
