@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
-import logo from "../assets/logo.png"
+import logo from "../assets/logo.png";
 
 function SignUpPage() {
    const [email, setEmail] = useState("");
@@ -37,7 +37,7 @@ function SignUpPage() {
 
    return (
       <Container>
-         <Logo src={logo} alt="logo" />
+        <Logo src={logo} alt="logo" />
          <Formulario onSubmit={cadastro}>
             <Input
                type="text"
