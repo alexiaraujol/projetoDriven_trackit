@@ -1,6 +1,6 @@
 
 import LoginPage from "./pages/LoginPage"
-import SingUpPage from "./pages/SingUpPage"
+import SignUpPage from "./pages/SingUpPage"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Hoje from "./pages/Hoje";
@@ -24,7 +24,7 @@ function App() {
 
 
             <Route path="/" element={<LoginPage setToken={setToken} />} />
-            <Route path="/sing-up" element={<SingUpPage />} />
+            <Route path="/sing-up" element={<SignUpPage />} />
             <Route path="/hoje" element={<Hoje token={token} />} /> 
             <Route path="/habitos" element={<Habitos token={token} setToken={setToken} />} />
           </Routes>
