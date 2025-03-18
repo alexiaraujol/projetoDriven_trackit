@@ -11,7 +11,7 @@ function Habitos({ token }) {
     const [showCriarHabito, setShowCriarHabito] = useState(false);
 
     useEffect(() => {
-        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today";
+        const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
 
         const config = {
             headers: {
@@ -28,7 +28,10 @@ function Habitos({ token }) {
         setShowCriarHabito(!showCriarHabito);
     };
 
-    
+    const handleAddHabito = (novoHabito) => {
+        setHabits([...habits, novoHabito]);
+        setShowCriarHabito(false); // Ocultar o componente CriarHabito após adicionar o hábito
+    };
 
     return (
         <>
@@ -39,10 +42,7 @@ function Habitos({ token }) {
                     <Botao onClick={toggleCriarHabito}>+</Botao>
                 </Topo>
 
-               
-
-                {showCriarHabito && <CriarHabito token={token} />}
-
+                {showCriarHabito && <CriarHabito token={token} onAdd={handleAddHabito} />}
 
                 {habits.map((habit, index) => (
                     <HabitoCriado token={token} habit={habit} key={index} />
@@ -108,4 +108,3 @@ const Texto = styled.p`
     font-family: "Lexend Deca", sans-serif;
     color: #666666;
 `;
-

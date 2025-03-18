@@ -43,7 +43,16 @@ function Hoje({ token }) {
             .then((res) => {
                 setHabits(habits.map(habit => {
                     if (habit.id === id) {
-                        return { ...habit, done: !habit.done };
+                        const updatedHabit = { ...habit, done: !habit.done };
+                        if (!habit.done) {
+                            updatedHabit.currentSequence += 1;
+                            if (updatedHabit.currentSequence > updatedHabit.highestSequence) {
+                                updatedHabit.highestSequence = updatedHabit.currentSequence;
+                            }
+                        } else {
+                            updatedHabit.currentSequence -= 1;
+                        }
+                        return updatedHabit;
                     }
                     return habit;
                 }));
@@ -58,7 +67,7 @@ function Hoje({ token }) {
             <>
                 <Navbar />
                 <Container>
-                <Data>{dayjs().format('dddd,  DD/MM')}</Data>
+                    <Data>{dayjs().format('dddd, DD/MM')}</Data>
                     <Texto>Você não tem nenhum hábito cadastrado hoje.</Texto>
                 </Container>
                 <Rodape />
@@ -70,13 +79,13 @@ function Hoje({ token }) {
         <>
             <Navbar />
             <Container>
-                <Data>{dayjs().format('dddd,  DD/MM')}</Data>
+                <Data>{dayjs().format('dddd, DD/MM')}</Data>
 
                 {habits.map((habit, index) => (
                     <Caixa key={index}>
                         <div>
                             <Habito>{habit.name}</Habito>
-                            <Informacoes>Sequencia: {habit.currentSequence} dias <br />
+                            <Informacoes>Sequência: {habit.currentSequence} dias <br />
                                 Seu recorde: {habit.highestSequence} dias</Informacoes>
                         </div>
                         <CheckBoxIcon

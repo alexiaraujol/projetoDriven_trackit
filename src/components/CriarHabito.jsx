@@ -1,15 +1,18 @@
 import styled from 'styled-components';
 import { ThreeDots } from 'react-loader-spinner';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
-function CriarHabito({ token }) {
+function CriarHabito({ token, onAdd }) {
     const [name, setName] = useState("");
     const [diasSelecionados, setDiasSelecionados] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true); // Inicialize como true
+    const [error, setError] = useState("");
     const diasDaSemana = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
-    
+
+    useEffect(() => {
+        setLoading(false); // Defina como false após a montagem do componente
+    }, []);
 
     const handleDiaClick = (index) => {
         if (diasSelecionados.includes(index)) {
@@ -27,6 +30,10 @@ function CriarHabito({ token }) {
 
     function criarHabito(e) {
         e.preventDefault();
+        if (diasSelecionados.length === 0) {
+            setError("Selecione pelo menos um dia da semana.");
+            return;
+        }
         setLoading(true);
 
         const URL = "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits";
@@ -38,8 +45,7 @@ function CriarHabito({ token }) {
         axios.post(URL, body, config)
             .then((res) => {
                 setLoading(false);
-                console.log(res.data);
-
+                onAdd(res.data); // Chame a função onAdd com o novo hábito
             })
             .catch(err => {
                 setLoading(false);
@@ -71,10 +77,10 @@ function CriarHabito({ token }) {
                         </DiadaSemana>
                     ))}
                 </div>
-
+                {error && <ErrorMessage>{error}</ErrorMessage>}
                 <Botoes>
                     <Cancelar type="button" disabled={loading}>Cancelar</Cancelar>
-                    <Salvar type="submit" disabled={loading}>
+                    <Salvar type="submit" disabled={loading || diasSelecionados.length === 0}>
                         {loading ? <ThreeDots
                             visible={true}
                             height="13"
@@ -161,4 +167,11 @@ const Botoes = styled.div`
     justify-content: end;
     align-items: center;
     margin-top: 35px;
+`;
+
+const ErrorMessage = styled.p`
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    font-family: "Lexend Deca", sans-serif;
 `;
