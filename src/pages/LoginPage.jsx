@@ -4,7 +4,7 @@ import { useContext, useState } from 'react';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
 import UserContext from '../contexts/UserContext';
-import logo from "../assets/logo.png"
+import logo from "/src/assets/logo.png";
 
 function LoginPage({ setToken }) {
    const [email, setEmail] = useState("");
