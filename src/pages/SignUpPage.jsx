@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import axios from 'axios';
 import { ThreeDots } from 'react-loader-spinner';
-import logo from "/src/assets/logo.png";
+import logo from "../assets/logoapp.png";
 
 function SignUpPage() {
    const [email, setEmail] = useState("");
